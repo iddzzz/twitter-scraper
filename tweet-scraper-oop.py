@@ -28,11 +28,13 @@ xpath = {
 
 class TweetScraper:
     options = webdriver.ChromeOptions()
-    # For remembering the username and password entered, different each computer
-    options.add_argument(r'--user-data-dir=C:\Users\Saidzzz\AppData\Local\Google\Chrome\User Data\Default')
+    # For remembering the previous login session
+    # options.add_argument(r'--user-data-dir=C:\Users\Saidzzz\AppData\Local\Google\Chrome\User Data\Default')
+    options.add_argument(r'--user-data-dir=C:\Users\<<Computer Name>>\AppData\Local\Google\Chrome\User Data\Default')
     options.add_argument('--profile-directory=Default')
     options.headless = True  # To make browser disappear
-    s = Service(r"D:/physics/python/chromedriver.exe")
+    s = Service(os.path.join(os.path.realpath(os.getcwd()), 'chrome-driver', 'chromedriver.exe'))
+    
 
     def __init__(self):
         self.data = []
@@ -151,13 +153,15 @@ class TweetScraper:
 
 
 if __name__ == '__main__':
-    kata_kunci = input('Enter the keyword: ')
-    bulan = input('Enter a name of month in number (e.g. 01, 02, ...): ')
-    year = input('Year: ')
+    word = input('Keyword: ')
+    tanggal = input('Since (date): ')
+    bulan = input('Since (month) (in number e.g. 01, 02, ... ): ')
+    year = input('Since (year): ')
+    next_tanggal = input('Until (date): ')
+    next_bulan = input('Until (month) (in number e.g. 01, 02, ... ): ')
+    next_year = input('Until (year): ')
     output_name = input('Save as (with .csv): ')
-    next_bulan = '01' if bulan == '12' else int(bulan) + 1
-    next_year = int(year) + 1 if bulan == '12' else year
-    url = f"https://twitter.com/search?q=({kata_kunci})%20until%3A{next_year}-{next_bulan}-01%20since%3A{year}-{bulan}-01&src=typed_query&f=live"
+    url = f"https://twitter.com/search?q=({word})%20until%3A{next_year}-{next_bulan}-{next_tanggal}%20since%3A{year}-{bulan}-{tanggal}&src=typed_query&f=live"
     ts = TweetScraper()
     ts.access(url=url)
     ts.check()
